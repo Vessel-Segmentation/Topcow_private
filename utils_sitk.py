@@ -15,10 +15,10 @@ def convert_mha_nii(img_path, file_ending, save_path="."):
 
 
 if __name__ == "__main__":
-    img_path = "test/topcow_ct_whole_002_0000.nii.gz"
-    convert_mha_nii(img_path, ".mha", save_path="test/input/images/head-ct-angio/")
+    img_path = "E:/git_clone_repo/Topcow_private/test/expected_output/topcow_mr_whole_066_testdocker_bin_seg.mha"
+    convert_mha_nii(img_path, ".nii.gz", save_path="E:/git_clone_repo/Topcow_private/test/expected_output/")
 
-    img_path = "test/topcow_mr_whole_002_0000.nii.gz"
-    convert_mha_nii(img_path, ".mha", save_path="test/input/images/head-mr-angio/")
+    img_path = "E:/git_clone_repo/Topcow_private/test/input/images/head-mr-angio/uuid_of_mr_whole_066.mha"
+    convert_mha_nii(img_path, ".nii.gz", save_path="E:/git_clone_repo/Topcow_private/test/input/images/head-mr-angio/")
 
     print("Done")

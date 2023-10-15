@@ -2,37 +2,43 @@
 
 # If you intended to pass a host directory, use absolute path.
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+#SCRIPTPATH=/mnt/e/git_clone_repo/Topcow_private
 echo "SCRIPTPATH = ${SCRIPTPATH}"
-
-bash ./build.sh
+#/mnt/e/git_clone_repo/Topcow_private
+#/alidata/www/wwwroot/ftp
+#bash ./build.sh
 
 # Maximum is currently 30g, configurable in your algorithm image settings on grand challenge
-MEM_LIMIT="4g"
+MEM_LIMIT="30g"
 
 
-OUTPUT_VOL="topcow-test-docker-output"
+#OUTPUT_VOL="topcow-test-docker-output"
+OUTPUT_VOL=$SCRIPTPATH/test/output
 echo "OUTPUT_VOL = ${OUTPUT_VOL}"
 
-docker volume create ${OUTPUT_VOL}
+#docker volume create "topcow-test-docker-output"
+
+#         --memory="${MEM_LIMIT}" \
+#        --memory-swap="${MEM_LIMIT}" \        --pids-limit="256" \--ipc=host  \--memory-swap="30g" \ --rm \
+
+#		--pids-limit="-1" \
+#		--memory="${MEM_LIMIT}" \
+#        --memory-swap="${MEM_LIMIT}" \
 
 # Do not change any of the parameters to docker run, these are fixed
 # This is to mimic a restricted Grand-Challenge running environment
 # ie no internet and no new privileges etc.
-docker run --rm \
-        --memory="${MEM_LIMIT}" \
-        --memory-swap="${MEM_LIMIT}" \
-        --network="none" \
+docker run --network="none" \
         --cap-drop="ALL" \
         --security-opt="no-new-privileges" \
         --shm-size="128m" \
-        --pids-limit="256" \
+		--ipc=host  \
         -v $SCRIPTPATH/test/input/images/head-ct-angio:/input/images/head-ct-angio \
         -v $SCRIPTPATH/test/input/images/head-mr-angio:/input/images/head-mr-angio \
         -v ${OUTPUT_VOL}:/output/ \
-        --gpus=all \
         cowsegmentation
 
-
+#        --gpus=all \
 ###################################################################################
 # Test if the docker outputs match the expected outputs in ./test/expected_output/
 ###################################################################################
@@ -43,7 +49,7 @@ echo "##### Test 0 >>> segmentation mask check"
 # TODO: Provide the expected output segmentation mask of your algorithm in ./test/expected_output/
 # TODO: In the python code snippet below change the following if necessary:
 
-TASK="binary"  # "binary" or "multiclass"
+TASK="multiclass"  # "binary" or "multiclass"
 IMAGE_FILENAME="uuid_of_mr_whole_066.mha"
 EXPECTED_SEG_MASK="topcow_mr_whole_066_testdocker_bin_seg.mha"
 
@@ -92,4 +98,4 @@ echo
 
 echo "Please make sure you pass the above 2 tests before submitting your docker"
 
-docker volume rm ${OUTPUT_VOL}
+#docker volume rm ${OUTPUT_VOL}
